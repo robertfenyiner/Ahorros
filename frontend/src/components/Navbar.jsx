@@ -20,7 +20,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="contenedor navbar-inner">
         <Link to="/" className="navbar-logo" onClick={cerrar}>
-          <img src="/logo.svg" alt="logo" className="navbar-logo-img" />
+          <img src="/logo.jpg" alt="logo" className="navbar-logo-img" />
           <span>RobertApp</span>
         </Link>
 

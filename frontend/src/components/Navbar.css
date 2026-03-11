@@ -14,8 +14,9 @@
   text-decoration: none;
 }
 .navbar-logo-img {
-  width: 32px; height: 32px; object-fit: contain;
-  border-radius: 50%; background: var(--morado-fondo);
+  width: 34px; height: 34px; object-fit: cover;
+  border-radius: 50%; border: 2px solid var(--morado-fondo);
+  box-shadow: 0 0 0 2px var(--morado);
 }
 .navbar-hamburger {
   display: none; align-items: center; justify-content: center;
