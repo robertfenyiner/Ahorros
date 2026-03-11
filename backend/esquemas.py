@@ -1,6 +1,23 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
+
+
+# ── Bancos ────────────────────────────────────────────────────────────────────────────────
+
+class BancoCrear(BaseModel):
+    nombre: str = Field(..., min_length=1, max_length=100)
+    tasa_anual: float = Field(..., ge=0, le=100)
+
+class BancoActualizar(BaseModel):
+    nombre: Optional[str] = Field(None, min_length=1, max_length=100)
+    tasa_anual: Optional[float] = Field(None, ge=0, le=100)
+
+class BancoRespuesta(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    nombre: str
+    tasa_anual: float
 
 
 # ── Cajitas ──────────────────────────────────────────────────────────────────

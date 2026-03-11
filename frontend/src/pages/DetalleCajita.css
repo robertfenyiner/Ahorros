@@ -71,3 +71,11 @@
 .tabla-diaria tr:last-child td { border-bottom: none; }
 .tabla-diaria tr:hover td { background: var(--gris-suave); }
 .tabla-diaria tr.fila-hoy td { background: #F0FDF4; font-weight: 500; }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .detalle-header { flex-direction: column; align-items: flex-start; gap: .75rem; }
+  .detalle-acciones { width: 100%; justify-content: flex-start; }
+  .resumen-diario { gap: 1rem; }
+  .filtros-dias .filtro-dia-btn { padding: .25rem .45rem; font-size: .72rem; }
+}

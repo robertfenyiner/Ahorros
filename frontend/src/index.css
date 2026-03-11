@@ -73,3 +73,28 @@ body {
 .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
 .w-full { width: 100%; }
 .text-center { text-align: center; }
+
+/* ── Responsive global ───────────────────────────────────────────────────── */
+.pagina { padding: 1.5rem 1rem; }
+.pagina-titulo { font-size: 1.6rem; font-weight: 700; }
+
+@media (max-width: 640px) {
+  .pagina { padding: 1rem .75rem; }
+  .pagina-titulo { font-size: 1.3rem; }
+  .tarjeta { padding: 1.1rem; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); gap: .65rem; }
+  .btn { font-size: .82rem; padding: .5rem .95rem; }
+  .modal-caja { padding: 1.25rem; }
+  /* Tablas con scroll horizontal en móvil */
+  .tabla-diaria-wrapper,
+  .tabla-bancos-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+@media (max-width: 380px) {
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .filtros-dias { flex-wrap: wrap; }
+}
+
+/* Asegurar que el contenedor no desborda */
+.contenedor { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }

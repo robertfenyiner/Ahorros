@@ -1,0 +1,23 @@
+.bancos-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+
+.tabla-bancos-wrapper { overflow-x: auto; }
+
+.tabla-bancos {
+  width: 100%; border-collapse: collapse; font-size: .9rem;
+}
+.tabla-bancos th {
+  padding: .85rem 1.25rem; text-align: left; font-size: .8rem; font-weight: 600;
+  color: #6B7280; background: var(--gris-suave); border-bottom: 1px solid var(--borde);
+}
+.tabla-bancos td {
+  padding: .9rem 1.25rem; border-bottom: 1px solid var(--borde);
+}
+.tabla-bancos tr:last-child td { border-bottom: none; }
+.tabla-bancos tr:hover td { background: var(--gris-suave); }
+
+@media (max-width: 480px) {
+  .tabla-bancos th, .tabla-bancos td { padding: .75rem .85rem; }
+}

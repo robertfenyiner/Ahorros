@@ -16,3 +16,9 @@
 .cajita-saldo { font-size: 1.5rem; font-weight: 700; }
 .barra-meta { height: 6px; background: var(--borde); border-radius: 999px; overflow: hidden; }
 .barra-progreso { height: 100%; border-radius: 999px; transition: width .3s; }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .stat-valor { font-size: .95rem; }
+  .cajita-saldo { font-size: 1.2rem; }
+}

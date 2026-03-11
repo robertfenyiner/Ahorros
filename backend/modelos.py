@@ -40,6 +40,15 @@ class Movimiento(Base):
     cajita = relationship("Cajita", back_populates="movimientos")
 
 
+class Banco(Base):
+    """Banco o entidad financiera con su tasa de rendimiento."""
+    __tablename__ = "bancos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String(100), nullable=False, unique=True)
+    tasa_anual = Column(Float, nullable=False)
+
+
 class HistorialTasa(Base):
     """Registro de cada cambio de tasa de rendimiento en una cajita."""
     __tablename__ = "historial_tasas"

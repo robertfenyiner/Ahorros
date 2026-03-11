@@ -27,3 +27,9 @@ export const obtenerDetalleDiario = (cajitaId, dias = 30) => api.get(`/cajitas/$
 // ── Proyección ────────────────────────────────────────────────────────────────
 export const calcularProyeccion = (datos) => api.post('/proyeccion/', datos).then(r => r.data)
 export const calcularProyeccionDiaria = (datos) => api.post('/proyeccion/diaria', datos).then(r => r.data)
+
+// ── Bancos ────────────────────────────────────────────────────────────────────
+export const listarBancos      = ()          => api.get('/bancos/').then(r => r.data)
+export const crearBanco        = (datos)     => api.post('/bancos/', datos).then(r => r.data)
+export const actualizarBanco   = (id, datos) => api.put(`/bancos/${id}`, datos).then(r => r.data)
+export const eliminarBanco     = (id)        => api.delete(`/bancos/${id}`)

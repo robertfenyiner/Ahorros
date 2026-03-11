@@ -1,28 +1,25 @@
-import { useState } from 'react'
-import { calcularProyeccion, calcularProyeccionDiaria } from '../api'
+import { useState, useEffect } from 'react'
+import { calcularProyeccion, calcularProyeccionDiaria, listarBancos } from '../api'
 import { formatearPeso } from '../utils'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts'
 import toast from 'react-hot-toast'
 import './Proyeccion.css'
 
-const BANCOS_PRESET = [
-  { nombre: 'Nu Colombia',   tasa: 8.75 },
-  { nombre: 'Bancolombia',   tasa: 5.50 },
-  { nombre: 'Davivienda',    tasa: 5.20 },
-  { nombre: 'BBVA Colombia', tasa: 4.80 },
-  { nombre: 'Personalizado', tasa: null },
-]
-
 export default function Proyeccion() {
   const [form, setForm] = useState({
     capital_inicial: '', aporte_mensual: '', tasa_anual: 8.75, meses: 12,
   })
+  const [bancos, setBancos] = useState([])
   const [resultado, setResultado] = useState(null)
   const [cargando, setCargando] = useState(false)
   const [bancoSel, setBancoSel] = useState('Nu Colombia')
   const [resultadoDiario, setResultadoDiario] = useState(null)
   const [diasDetalle, setDiasDetalle] = useState(30)
   const [cargandoDiario, setCargandoDiario] = useState(false)
+
+  useEffect(() => {
+    listarBancos().then(data => setBancos([...data, { id: 0, nombre: 'Personalizado', tasa_anual: null }])).catch(() => {})
+  }, [])
 
   const cambiar = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -89,11 +86,11 @@ export default function Proyeccion() {
           <div className="campo">
             <label>Banco / Tasa de referencia</label>
             <div className="bancos-grid">
-              {BANCOS_PRESET.map(b => (
+              {bancos.map(b => (
                 <button key={b.nombre} type="button"
                   className={`banco-btn ${bancoSel === b.nombre ? 'activo' : ''}`}
-                  onClick={() => seleccionarBanco(b)}>
-                  {b.nombre} {b.tasa ? `${b.tasa}%` : ''}
+                  onClick={() => seleccionarBanco({ nombre: b.nombre, tasa: b.tasa_anual })}>
+                  {b.nombre} {b.tasa_anual ? `${b.tasa_anual}%` : ''}
                 </button>
               ))}
             </div>
