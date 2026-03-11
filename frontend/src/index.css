@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --morado: #7C3AED;
+  --morado-claro: #A78BFA;
+  --morado-fondo: #F3EEFF;
+  --verde: #10B981;
+  --rojo: #EF4444;
+  --amarillo: #F59E0B;
+  --gris-texto: #374151;
+  --gris-suave: #F9FAFB;
+  --borde: #E5E7EB;
+  --sombra: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+  --sombra-md: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--gris-suave);
+  color: var(--gris-texto);
+  min-height: 100vh;
+}
+
+.contenedor { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem 1.2rem;
+  border-radius: .5rem; font-size: .875rem; font-weight: 500; cursor: pointer;
+  border: none; transition: all .15s; }
+.btn-primario { background: var(--morado); color: #fff; }
+.btn-primario:hover { background: #6D28D9; }
+.btn-secundario { background: #fff; color: var(--gris-texto); border: 1px solid var(--borde); }
+.btn-secundario:hover { background: var(--gris-suave); }
+.btn-peligro { background: var(--rojo); color: #fff; }
+.btn-peligro:hover { background: #DC2626; }
+.btn-sm { padding: .3rem .7rem; font-size: .78rem; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Tarjetas */
+.tarjeta { background: #fff; border-radius: .75rem; box-shadow: var(--sombra); padding: 1.5rem; }
+
+/* Formularios */
+.campo { display: flex; flex-direction: column; gap: .3rem; margin-bottom: 1rem; }
+.campo label { font-size: .875rem; font-weight: 500; }
+.campo input, .campo select, .campo textarea {
+  padding: .6rem .85rem; border: 1px solid var(--borde); border-radius: .5rem;
+  font-size: .9rem; font-family: inherit; outline: none; transition: border-color .15s; }
+.campo input:focus, .campo select:focus, .campo textarea:focus { border-color: var(--morado); }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; padding: .2rem .6rem;
+  border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.badge-verde { background: #D1FAE5; color: #065F46; }
+.badge-rojo { background: #FEE2E2; color: #991B1B; }
+.badge-morado { background: var(--morado-fondo); color: var(--morado); }
+
+/* Utils */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: .5rem; }
+.gap-4 { gap: 1rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-2 { margin-top: .5rem; }
+.text-sm { font-size: .875rem; }
+.text-xs { font-size: .75rem; }
+.text-muted { color: #6B7280; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.w-full { width: 100%; }
+.text-center { text-align: center; }

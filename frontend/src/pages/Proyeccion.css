@@ -1,0 +1,16 @@
+.proy-layout { display: flex; flex-direction: column; gap: 1.25rem; }
+.proy-form { max-width: 100%; }
+.proy-resultado { display: flex; flex-direction: column; gap: 1rem; }
+.bancos-grid { display: flex; flex-wrap: wrap; gap: .5rem; }
+.banco-btn {
+  padding: .35rem .75rem; border-radius: .4rem; font-size: .8rem; font-weight: 500;
+  border: 1px solid var(--borde); background: #fff; cursor: pointer; transition: all .15s;
+}
+.banco-btn.activo { background: var(--morado-fondo); border-color: var(--morado); color: var(--morado); }
+.banco-btn:hover:not(.activo) { border-color: #9CA3AF; }
+
+@media (min-width: 900px) {
+  .proy-layout { flex-direction: row; align-items: flex-start; }
+  .proy-form { min-width: 340px; max-width: 340px; }
+  .proy-resultado { flex: 1; }
+}

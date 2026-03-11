@@ -1,0 +1,10 @@
+.tipo-selector {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .5rem;
+}
+.tipo-btn {
+  padding: .65rem; border-radius: .5rem; font-weight: 600; font-size: .9rem;
+  cursor: pointer; border: 2px solid var(--borde); background: #fff;
+  transition: all .15s;
+}
+.tipo-btn.activo-deposito { background: #D1FAE5; border-color: var(--verde); color: #065F46; }
+.tipo-btn.activo-retiro   { background: #FEE2E2; border-color: var(--rojo);  color: #991B1B; }

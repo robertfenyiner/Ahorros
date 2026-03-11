@@ -1,0 +1,22 @@
+.detalle-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; margin-bottom: 0;
+}
+.proyeccion-resumen {
+  display: flex; gap: 2rem; margin-top: 1rem; padding-top: 1rem;
+  border-top: 1px solid var(--borde);
+}
+.lista-movimientos { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+.movimiento-item {
+  display: flex; align-items: center; gap: .85rem;
+  padding: .7rem; border-radius: .5rem; transition: background .1s;
+}
+.movimiento-item:hover { background: var(--gris-suave); }
+.mov-dot {
+  width: .6rem; height: .6rem; border-radius: 50%; flex-shrink: 0;
+}
+.mov-dot.deposito { background: var(--verde); }
+.mov-dot.retiro   { background: var(--rojo); }
+.mov-monto { font-weight: 700; white-space: nowrap; }
+.mov-monto.deposito { color: var(--verde); }
+.mov-monto.retiro   { color: var(--rojo); }

@@ -1,0 +1,7 @@
+.cajita-card {
+  display: block; text-decoration: none; color: inherit;
+  background: #fff; border-radius: .75rem; box-shadow: var(--sombra);
+  padding: 1.25rem; border-top: 4px solid #ccc;
+  transition: box-shadow .15s, transform .15s;
+}
+.cajita-card:hover { box-shadow: var(--sombra-md); transform: translateY(-2px); }

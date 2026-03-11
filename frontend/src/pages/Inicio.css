@@ -1,0 +1,18 @@
+.pagina { padding: 2rem 1rem; }
+.pagina-titulo { font-size: 1.6rem; font-weight: 700; }
+.cargando { display: flex; align-items: center; justify-content: center; height: 60vh; font-size: 1.1rem; color: #6B7280; }
+.stat-card { display: flex; align-items: center; gap: 1rem; }
+.stat-icono { border-radius: .6rem; padding: .6rem; display: flex; }
+.stat-valor { font-size: 1.1rem; }
+.texto-vacio { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 3rem; color: #9CA3AF; }
+.cajita-card {
+  display: block; text-decoration: none; color: inherit;
+  background: #fff; border-radius: .75rem; box-shadow: var(--sombra);
+  padding: 1.25rem; border-top: 4px solid #ccc;
+  transition: box-shadow .15s, transform .15s;
+}
+.cajita-card:hover { box-shadow: var(--sombra-md); transform: translateY(-2px); }
+.cajita-dot { width: .7rem; height: .7rem; border-radius: 50%; }
+.cajita-saldo { font-size: 1.5rem; font-weight: 700; }
+.barra-meta { height: 6px; background: var(--borde); border-radius: 999px; overflow: hidden; }
+.barra-progreso { height: 100%; border-radius: 999px; transition: width .3s; }
