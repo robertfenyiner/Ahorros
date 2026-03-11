@@ -39,7 +39,7 @@ export default function Inicio() {
     <div className="contenedor pagina">
       <div className="flex items-center justify-between" style={{ marginBottom: '1.5rem' }}>
         <div>
-          <h1 className="pagina-titulo">¡Hola! 👋</h1>
+          <h1 className="pagina-titulo">¡Hola, Robert! 👋</h1>
           <p className="text-muted text-sm">Aquí está el resumen de tus ahorros</p>
         </div>
         <button className="btn btn-primario" onClick={() => setMostrarModal(true)}>
