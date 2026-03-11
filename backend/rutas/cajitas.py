@@ -124,20 +124,36 @@ def obtener_detalle_diario(
     dias: int = 30,
     db: Session = Depends(obtener_db),
 ):
-    """Devuelve el interés real ganado día a día en la cajita."""
+    """Proyecta el interés estimado día a día para los próximos N días desde el saldo actual."""
     cajita = db.query(Cajita).filter(Cajita.id == cajita_id).first()
     if not cajita:
         raise HTTPException(status_code=404, detail="Cajita no encontrada")
 
-    from calculos import calcular_detalle_diario
-    detalle = calcular_detalle_diario(
-        movimientos=cajita.movimientos,
-        historial_tasas=list(cajita.historial_tasas),
-        fallback_tasa=cajita.tasa_anual,
-        fallback_fecha=cajita.creada_en,
-        dias=min(max(1, dias), 365),
-    )
-    return detalle
+    dias = min(max(1, dias), 365)
+
+    # Calcular el saldo real actual (incluye todos los intereses ya devengados)
+    resumen = _calcular_resumen(cajita, cajita.movimientos)
+    saldo_actual = resumen.saldo_actual
+
+    if saldo_actual <= 0:
+        return []
+
+    from calculos import proyectar_dias
+    from datetime import date, timedelta
+
+    hoy = date.today()
+    puntos = proyectar_dias(saldo_actual, 0, cajita.tasa_anual, dias)
+
+    return [
+        {
+            "dia": p["dia"],
+            "fecha": (hoy + timedelta(days=p["dia"] - 1)).isoformat(),
+            "interes_generado": p["interes_generado"],
+            "tasa_vigente": cajita.tasa_anual,
+            "saldo_total": p["saldo_total"],
+        }
+        for p in puntos
+    ]
 
 
 # ── Historial de tasas ────────────────────────────────────────────────────────

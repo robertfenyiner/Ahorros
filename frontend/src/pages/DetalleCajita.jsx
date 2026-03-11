@@ -39,7 +39,7 @@ export default function DetalleCajita() {
       setCajita(c)
       setMovimientos(movs.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)))
       setHistorialTasas(tasas)
-      setDetalleDiario([...diario].reverse()) // más reciente primero
+      setDetalleDiario(diario) // día 1 = hoy, día N = futuro
 
       const proy = await calcularProyeccion({
         capital_inicial: c.resumen.saldo_actual,
