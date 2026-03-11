@@ -116,6 +116,30 @@ def listar_movimientos(cajita_id: int, db: Session = Depends(obtener_db)):
     return cajita.movimientos
 
 
+# ── Detalle diario ────────────────────────────────────────────────────────────
+
+@router.get("/{cajita_id}/detalle-diario")
+def obtener_detalle_diario(
+    cajita_id: int,
+    dias: int = 30,
+    db: Session = Depends(obtener_db),
+):
+    """Devuelve el interés real ganado día a día en la cajita."""
+    cajita = db.query(Cajita).filter(Cajita.id == cajita_id).first()
+    if not cajita:
+        raise HTTPException(status_code=404, detail="Cajita no encontrada")
+
+    from calculos import calcular_detalle_diario
+    detalle = calcular_detalle_diario(
+        movimientos=cajita.movimientos,
+        historial_tasas=list(cajita.historial_tasas),
+        fallback_tasa=cajita.tasa_anual,
+        fallback_fecha=cajita.creada_en,
+        dias=min(max(1, dias), 365),
+    )
+    return detalle
+
+
 # ── Historial de tasas ────────────────────────────────────────────────────────
 
 @router.get("/{cajita_id}/tasas", response_model=list[HistorialTasaRespuesta])

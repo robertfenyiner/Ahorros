@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { calcularProyeccion } from '../api'
+import { calcularProyeccion, calcularProyeccionDiaria } from '../api'
 import { formatearPeso } from '../utils'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts'
 import toast from 'react-hot-toast'
@@ -20,12 +20,37 @@ export default function Proyeccion() {
   const [resultado, setResultado] = useState(null)
   const [cargando, setCargando] = useState(false)
   const [bancoSel, setBancoSel] = useState('Nu Colombia')
+  const [resultadoDiario, setResultadoDiario] = useState(null)
+  const [diasDetalle, setDiasDetalle] = useState(30)
+  const [cargandoDiario, setCargandoDiario] = useState(false)
 
   const cambiar = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
   const seleccionarBanco = (b) => {
     setBancoSel(b.nombre)
     if (b.tasa !== null) setForm(f => ({ ...f, tasa_anual: b.tasa }))
+  }
+
+  const fetchDiario = async (dias, formData) => {
+    setCargandoDiario(true)
+    try {
+      const res = await calcularProyeccionDiaria({
+        capital_inicial: parseFloat(formData.capital_inicial || 0),
+        aporte_mensual:  parseFloat(formData.aporte_mensual || 0),
+        tasa_anual:      parseFloat(formData.tasa_anual),
+        dias,
+      })
+      setResultadoDiario(res)
+    } catch {
+      toast.error('Error calculando detalle diario')
+    } finally {
+      setCargandoDiario(false)
+    }
+  }
+
+  const cambiarDiasDetalle = (d) => {
+    setDiasDetalle(d)
+    if (resultado) fetchDiario(d, form)
   }
 
   const calcular = async (e) => {
@@ -43,6 +68,7 @@ export default function Proyeccion() {
         meses:           parseInt(form.meses),
       })
       setResultado(res)
+      fetchDiario(diasDetalle, form)
     } catch {
       toast.error('Error al calcular')
     } finally {
@@ -142,6 +168,64 @@ export default function Proyeccion() {
                   <Area type="monotone" dataKey="interes"   stroke="#10B981" fill="url(#g2)" strokeWidth={2} name="Intereses"/>
                 </AreaChart>
               </ResponsiveContainer>
+            </div>
+
+            {/* ── Detalle día a día ─────────────────────────────────────────────── */}
+            <div className="tarjeta" style={{ marginTop: '1.25rem' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
+                <h3 style={{ fontWeight:700 }}>Detalle día a día</h3>
+                <div className="filtros-dias">
+                  {[7, 30, 90, 180, 365].map(d => (
+                    <button key={d}
+                      className={`filtro-dia-btn ${diasDetalle === d ? 'activo' : ''}`}
+                      onClick={() => cambiarDiasDetalle(d)}>
+                      {d}d
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {cargandoDiario && <p className="text-muted text-sm">Calculando...</p>}
+
+              {resultadoDiario && !cargandoDiario && (
+                <>
+                  <div className="resumen-diario" style={{ marginBottom:'1rem' }}>
+                    {[
+                      { label:'Hoy (día 1)',      val: formatearPeso(resultadoDiario.interes_hoy) },
+                      { label:`Primeros ${diasDetalle}d`, val: formatearPeso(resultadoDiario.interes_total) },
+                      { label:'Saldo final',       val: formatearPeso(resultadoDiario.total_final) },
+                    ].map(s => (
+                      <div key={s.label} className="resumen-diario-item">
+                        <span className="text-xs text-muted">{s.label}</span>
+                        <span style={{ fontWeight:700, color:'#10B981' }}>{s.val}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="tabla-diaria-wrapper">
+                    <table className="tabla-diaria">
+                      <thead>
+                        <tr>
+                          <th>Día</th>
+                          <th>Interés generado</th>
+                          <th>Interés acumulado</th>
+                          <th>Saldo total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {resultadoDiario.puntos.map((p, i) => (
+                          <tr key={p.dia} className={i === 0 ? 'fila-hoy' : ''}>
+                            <td>Día {p.dia}</td>
+                            <td style={{ color:'#10B981', fontWeight:500 }}>+{formatearPeso(p.interes_generado)}</td>
+                            <td>+{formatearPeso(p.interes_acumulado)}</td>
+                            <td style={{ fontWeight:600 }}>{formatearPeso(p.saldo_total)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

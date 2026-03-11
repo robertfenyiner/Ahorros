@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Plus, Trash2, TrendingUp, Percent, Clock } from 'lucide-react'
-import { obtenerCajita, obtenerMovimientos, obtenerHistorialTasas, eliminarCajita, eliminarMovimiento } from '../api'
-import { formatearPeso, formatearFecha } from '../utils'
+import { ArrowLeft, Plus, Trash2, TrendingUp, Percent, Clock, Calendar } from 'lucide-react'
+import {
+  obtenerCajita, obtenerMovimientos, obtenerHistorialTasas,
+  obtenerDetalleDiario, eliminarCajita, eliminarMovimiento,
+} from '../api'
+import { formatearPeso, formatearFecha, formatearFechaCorta } from '../utils'
 import ModalMovimiento from '../components/ModalMovimiento'
 import ModalCambiarTasa from '../components/ModalCambiarTasa'
 import toast from 'react-hot-toast'
 import './DetalleCajita.css'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { calcularProyeccion } from '../api'
+
+const FILTROS_DIAS = [7, 30, 90, 180, 365]
 
 export default function DetalleCajita() {
   const { id } = useParams()
@@ -17,32 +22,32 @@ export default function DetalleCajita() {
   const [movimientos, setMovimientos] = useState([])
   const [historialTasas, setHistorialTasas] = useState([])
   const [proyeccion, setProyeccion] = useState([])
+  const [detalleDiario, setDetalleDiario] = useState([])
+  const [diasFiltro, setDiasFiltro] = useState(30)
   const [mostrarModalMov, setMostrarModalMov] = useState(false)
   const [mostrarModalTasa, setMostrarModalTasa] = useState(false)
   const [cargando, setCargando] = useState(true)
 
   const cargar = async () => {
     try {
-      const [c, movs, tasas] = await Promise.all([
+      const [c, movs, tasas, diario] = await Promise.all([
         obtenerCajita(id),
         obtenerMovimientos(id),
         obtenerHistorialTasas(id),
+        obtenerDetalleDiario(id, diasFiltro),
       ])
       setCajita(c)
       setMovimientos(movs.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)))
       setHistorialTasas(tasas)
+      setDetalleDiario([...diario].reverse()) // más reciente primero
 
-      if (c.resumen?.saldo_actual > 0) {
-        const proy = await calcularProyeccion({
-          capital_inicial: c.resumen.saldo_actual,
-          aporte_mensual: 0,
-          tasa_anual: c.tasa_anual,
-          meses: 12,
-        })
-        setProyeccion(proy.puntos.map(p => ({ mes: `M${p.mes}`, saldo: p.saldo, interes: p.interes_acumulado })))
-      } else {
-        setProyeccion([])
-      }
+      const proy = await calcularProyeccion({
+        capital_inicial: c.resumen.saldo_actual,
+        aporte_mensual: 0,
+        tasa_anual: c.tasa_anual,
+        meses: 12,
+      })
+      setProyeccion(proy.puntos.map(p => ({ mes: `M${p.mes}`, saldo: p.saldo, interes: p.interes_acumulado })))
     } catch {
       toast.error('Error al cargar la cajita')
     } finally {
@@ -50,7 +55,7 @@ export default function DetalleCajita() {
     }
   }
 
-  useEffect(() => { cargar() }, [id])
+  useEffect(() => { cargar() }, [id, diasFiltro])
 
   const handleEliminarCajita = async () => {
     if (!confirm(`¿Eliminar la cajita "${cajita.nombre}"? Esta acción no se puede deshacer.`)) return
@@ -114,6 +119,86 @@ export default function DetalleCajita() {
             <p style={{ fontSize: '1.15rem', fontWeight: 700, color: s.color }}>{s.val}</p>
           </div>
         ))}
+      </div>
+
+      {/* ── Interés día a día ──────────────────────────────────────────────── */}
+      <div className="tarjeta" style={{ marginBottom: '1.25rem' }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: '1rem' }}>
+          <div className="flex items-center gap-2">
+            <Calendar size={18} color={cajita.color} />
+            <h3 style={{ fontWeight: 700 }}>Interés día a día</h3>
+          </div>
+          <div className="filtros-dias">
+            {FILTROS_DIAS.map(f => (
+              <button
+                key={f}
+                className={`filtro-dia-btn ${diasFiltro === f ? 'activo' : ''}`}
+                onClick={() => setDiasFiltro(f)}
+              >
+                {f}d
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Resumen rápido */}
+        {detalleDiario.length > 0 ? (
+          <>
+            <div className="resumen-diario">
+              <div className="resumen-diario-item">
+                <span className="text-xs text-muted">Hoy (estimado)</span>
+                <span className="font-bold" style={{ color: '#10B981' }}>
+                  +{formatearPeso(detalleDiario[0]?.interes_generado || 0)}
+                </span>
+              </div>
+              <div className="resumen-diario-item">
+                <span className="text-xs text-muted">Acumulado ({diasFiltro}d)</span>
+                <span className="font-bold" style={{ color: '#10B981' }}>
+                  +{formatearPeso(detalleDiario.reduce((s, d) => s + d.interes_generado, 0))}
+                </span>
+              </div>
+              <div className="resumen-diario-item">
+                <span className="text-xs text-muted">Tasa vigente</span>
+                <span className="font-bold" style={{ color: cajita.color }}>
+                  {cajita.tasa_anual}% EA
+                </span>
+              </div>
+            </div>
+
+            <div className="tabla-diaria-wrapper">
+              <table className="tabla-diaria">
+                <thead>
+                  <tr>
+                    <th>Día</th>
+                    <th>Fecha</th>
+                    <th>Interés generado</th>
+                    <th>Tasa vigente</th>
+                    <th>Saldo total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {detalleDiario.map((d, i) => (
+                    <tr key={d.dia} className={i === 0 ? 'fila-hoy' : ''}>
+                      <td className="text-muted text-sm">Día {d.dia}</td>
+                      <td className="text-sm">
+                        {i === 0 ? <b>Hoy</b> : formatearFechaCorta(d.fecha)}
+                      </td>
+                      <td style={{ color: '#10B981', fontWeight: 600 }}>
+                        +{formatearPeso(d.interes_generado)}
+                      </td>
+                      <td className="text-sm text-muted">{d.tasa_vigente}% EA</td>
+                      <td style={{ fontWeight: 600 }}>{formatearPeso(d.saldo_total)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <p className="text-muted text-sm text-center" style={{ padding: '1.5rem' }}>
+            Haz tu primer depósito para ver el cálculo diario de intereses.
+          </p>
+        )}
       </div>
 
       {/* Proyección */}

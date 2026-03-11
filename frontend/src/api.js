@@ -21,5 +21,9 @@ export const eliminarMovimiento = (cajitaId, movId) => api.delete(`/cajitas/${ca
 export const obtenerHistorialTasas = (cajitaId) => api.get(`/cajitas/${cajitaId}/tasas`).then(r => r.data)
 export const cambiarTasa = (cajitaId, datos) => api.post(`/cajitas/${cajitaId}/cambiar-tasa`, datos).then(r => r.data)
 
+// ── Detalle diario ──────────────────────────────────────────────────────────────
+export const obtenerDetalleDiario = (cajitaId, dias = 30) => api.get(`/cajitas/${cajitaId}/detalle-diario?dias=${dias}`).then(r => r.data)
+
 // ── Proyección ────────────────────────────────────────────────────────────────
 export const calcularProyeccion = (datos) => api.post('/proyeccion/', datos).then(r => r.data)
+export const calcularProyeccionDiaria = (datos) => api.post('/proyeccion/diaria', datos).then(r => r.data)

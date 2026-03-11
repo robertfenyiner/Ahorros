@@ -89,6 +89,40 @@ class RespuestaProyeccion(BaseModel):
     total_depositado: float
 
 
+# ── Proyección diaria ─────────────────────────────────────────────────────────
+
+class SolicitudProyeccionDiaria(BaseModel):
+    capital_inicial: float = Field(..., ge=0)
+    aporte_mensual: float = Field(0, ge=0)
+    tasa_anual: float = Field(8.75, ge=0, le=100)
+    dias: int = Field(..., ge=1, le=365)
+
+class PuntoProyeccionDiaria(BaseModel):
+    dia: int
+    interes_generado: float
+    saldo_total: float
+    interes_acumulado: float
+    total_depositado: float
+
+class RespuestaProyeccionDiaria(BaseModel):
+    puntos: list[PuntoProyeccionDiaria]
+    total_final: float
+    interes_total: float
+    total_depositado: float
+    interes_hoy: float
+    interes_30_dias: float
+
+
+# ── Detalle diario cajita ─────────────────────────────────────────────────────
+
+class DetalleDiaRespuesta(BaseModel):
+    dia: int
+    fecha: str
+    interes_generado: float
+    tasa_vigente: float
+    saldo_total: float
+
+
 # ── Historial de tasas ────────────────────────────────────────────────────────
 
 class CambiarTasaRequest(BaseModel):
