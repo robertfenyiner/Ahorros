@@ -1,0 +1,22 @@
+.modal-tasa { max-width: 440px; }
+
+.tasa-info-actual {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--morado-fondo); border-radius: .6rem;
+  padding: .85rem 1rem; margin-bottom: 1.25rem;
+}
+.tasa-valor-actual {
+  font-size: 1.4rem; font-weight: 700; color: var(--morado); flex: 1;
+}
+.tasa-diff {
+  display: block; font-size: .8rem; font-weight: 600; margin-top: .25rem;
+}
+.tasa-diff.sube { color: var(--verde); }
+.tasa-diff.baja { color: var(--rojo); }
+
+.tasa-aviso {
+  background: #FFFBEB; border: 1px solid #FDE68A; border-radius: .5rem;
+  padding: .75rem; font-size: .8rem; color: #78350F; margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+.tasa-aviso strong { display: block; margin-bottom: .2rem; }

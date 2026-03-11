@@ -17,5 +17,9 @@ export const obtenerMovimientos = (cajitaId) => api.get(`/cajitas/${cajitaId}/mo
 export const registrarMovimiento = (cajitaId, datos) => api.post(`/cajitas/${cajitaId}/movimientos`, datos).then(r => r.data)
 export const eliminarMovimiento = (cajitaId, movId) => api.delete(`/cajitas/${cajitaId}/movimientos/${movId}`)
 
+// ── Tasas ─────────────────────────────────────────────────────────────────────
+export const obtenerHistorialTasas = (cajitaId) => api.get(`/cajitas/${cajitaId}/tasas`).then(r => r.data)
+export const cambiarTasa = (cajitaId, datos) => api.post(`/cajitas/${cajitaId}/cambiar-tasa`, datos).then(r => r.data)
+
 // ── Proyección ────────────────────────────────────────────────────────────────
 export const calcularProyeccion = (datos) => api.post('/proyeccion/', datos).then(r => r.data)

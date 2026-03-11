@@ -48,7 +48,7 @@ export default function ModalMovimiento({ cajita, onCerrar, onRegistrado }) {
           </div>
           <div className="campo mt-4">
             <label>Monto (COP) *</label>
-            <input name="monto" type="number" min="1" step="1000" value={form.monto}
+            <input name="monto" type="number" min="1" step="any" value={form.monto}
               onChange={cambiar} placeholder="100000" required />
           </div>
           <div className="campo">

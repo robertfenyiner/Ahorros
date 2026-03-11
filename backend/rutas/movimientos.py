@@ -5,6 +5,7 @@ from datetime import datetime
 from base_datos import obtener_db
 from modelos import Cajita, Movimiento
 from esquemas import MovimientoCrear, MovimientoRespuesta
+from calculos import calcular_interes_con_historial
 
 router = APIRouter(prefix="/cajitas", tags=["movimientos"])
 
@@ -19,15 +20,19 @@ def registrar_movimiento(
     if not cajita:
         raise HTTPException(status_code=404, detail="Cajita no encontrada")
 
-    # Validar que un retiro no supere el saldo disponible
+    # Validar que un retiro no supere el saldo real (incluyendo intereses)
     if datos.tipo == "retiro":
-        total_dep = sum(m.monto for m in cajita.movimientos if m.tipo == "deposito")
-        total_ret = sum(m.monto for m in cajita.movimientos if m.tipo == "retiro")
-        saldo = total_dep - total_ret
-        if datos.monto > saldo:
+        saldo_real, _, _ = calcular_interes_con_historial(
+            movimientos=cajita.movimientos,
+            historial_tasas=list(cajita.historial_tasas),
+            fallback_tasa=cajita.tasa_anual,
+            fallback_fecha=cajita.creada_en,
+            fecha_actual=datetime.utcnow(),
+        )
+        if datos.monto > saldo_real:
             raise HTTPException(
                 status_code=400,
-                detail=f"Saldo insuficiente. Disponible: ${saldo:,.2f}"
+                detail=f"Saldo insuficiente. Disponible: ${saldo_real:,.2f}"
             )
 
     movimiento = Movimiento(

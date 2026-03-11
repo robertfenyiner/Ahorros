@@ -19,6 +19,11 @@ class Cajita(Base):
     creada_en = Column(DateTime, default=datetime.utcnow)
 
     movimientos = relationship("Movimiento", back_populates="cajita", cascade="all, delete-orphan")
+    historial_tasas = relationship(
+        "HistorialTasa", back_populates="cajita",
+        cascade="all, delete-orphan",
+        order_by="HistorialTasa.fecha_inicio",
+    )
 
 
 class Movimiento(Base):
@@ -33,3 +38,17 @@ class Movimiento(Base):
     fecha = Column(DateTime, default=datetime.utcnow)
 
     cajita = relationship("Cajita", back_populates="movimientos")
+
+
+class HistorialTasa(Base):
+    """Registro de cada cambio de tasa de rendimiento en una cajita."""
+    __tablename__ = "historial_tasas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cajita_id = Column(Integer, ForeignKey("cajitas.id"), nullable=False)
+    tasa_anual = Column(Float, nullable=False)
+    fecha_inicio = Column(DateTime, nullable=False)   # desde cuándo aplica
+    nota = Column(Text, nullable=True)
+    registrada_en = Column(DateTime, default=datetime.utcnow)
+
+    cajita = relationship("Cajita", back_populates="historial_tasas")

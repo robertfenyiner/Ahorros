@@ -87,3 +87,21 @@ class RespuestaProyeccion(BaseModel):
     total_final: float
     interes_total: float
     total_depositado: float
+
+
+# ── Historial de tasas ────────────────────────────────────────────────────────
+
+class CambiarTasaRequest(BaseModel):
+    tasa_anual: float = Field(..., ge=0.01, le=100)
+    nota: Optional[str] = None
+
+class HistorialTasaRespuesta(BaseModel):
+    id: int
+    cajita_id: int
+    tasa_anual: float
+    fecha_inicio: datetime
+    nota: Optional[str]
+    registrada_en: datetime
+
+    class Config:
+        from_attributes = True
