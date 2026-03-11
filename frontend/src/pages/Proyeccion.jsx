@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { calcularProyeccion, calcularProyeccionDiaria, listarBancos } from '../api'
 import { formatearPeso } from '../utils'
+import { ArrowLeft } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from 'recharts'
 import toast from 'react-hot-toast'
 import './Proyeccion.css'
@@ -12,6 +14,7 @@ export default function Proyeccion() {
   const [bancos, setBancos] = useState([])
   const [resultado, setResultado] = useState(null)
   const [cargando, setCargando] = useState(false)
+  const nav = useNavigate()
   const [bancoSel, setBancoSel] = useState('Nu Colombia')
   const [resultadoDiario, setResultadoDiario] = useState(null)
   const [diasDetalle, setDiasDetalle] = useState(30)
@@ -75,6 +78,9 @@ export default function Proyeccion() {
 
   return (
     <div className="contenedor pagina">
+      <button className="btn btn-secundario btn-sm" style={{ marginBottom: '1.25rem' }} onClick={() => nav(-1)}>
+        <ArrowLeft size={15} /> Volver
+      </button>
       <h1 className="pagina-titulo" style={{ marginBottom: '.25rem' }}>Simulador de Proyección</h1>
       <p className="text-muted text-sm" style={{ marginBottom: '1.5rem' }}>
         Calcula cómo crecerían tus ahorros con interés compuesto

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Plus, ArrowLeft } from 'lucide-react'
 import { obtenerCajitas } from '../api'
 import { formatearPeso } from '../utils'
 import ModalCajita from '../components/ModalCajita'
@@ -17,8 +17,13 @@ export default function Cajitas() {
 
   if (cargando) return <div className="cargando">Cargando...</div>
 
+  const nav = useNavigate()
+
   return (
     <div className="contenedor pagina">
+      <button className="btn btn-secundario btn-sm" style={{ marginBottom: '1.25rem' }} onClick={() => nav(-1)}>
+        <ArrowLeft size={15} /> Volver
+      </button>
       <div className="flex items-center justify-between" style={{ marginBottom: '1.5rem' }}>
         <h1 className="pagina-titulo">Mis Cajitas</h1>
         <button className="btn btn-primario" onClick={() => setMostrarModal(true)}>

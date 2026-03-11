@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Building2, Plus, Pencil, Trash2 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Building2, Plus, Pencil, Trash2, ArrowLeft } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { listarBancos, crearBanco, actualizarBanco, eliminarBanco } from '../api'
 import './Bancos.css'
@@ -9,6 +10,8 @@ export default function Bancos() {
   const [modal, setModal] = useState(null)   // null | { banco: null|obj }
   const [form, setForm] = useState({ nombre: '', tasa_anual: '' })
   const [guardando, setGuardando] = useState(false)
+
+  const nav = useNavigate()
 
   useEffect(() => { cargar() }, [])
 
@@ -61,6 +64,9 @@ export default function Bancos() {
 
   return (
     <div className="contenedor pagina">
+      <button className="btn btn-secundario btn-sm" style={{ marginBottom: '1.25rem' }} onClick={() => nav(-1)}>
+        <ArrowLeft size={15} /> Volver
+      </button>
       <div className="bancos-header">
         <div>
           <h1 className="pagina-titulo">Bancos y Entidades</h1>
