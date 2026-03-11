@@ -1,0 +1,17 @@
+[Unit]
+Description=RobertApp Frontend (Vite)
+After=network.target robertapp-backend.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/Ahorros/frontend
+ExecStart=/snap/bin/node /root/Ahorros/frontend/node_modules/.bin/vite --host 0.0.0.0
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+Environment=NODE_ENV=development
+
+[Install]
+WantedBy=multi-user.target
