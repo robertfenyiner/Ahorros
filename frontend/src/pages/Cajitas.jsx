@@ -7,6 +7,7 @@ import ModalCajita from '../components/ModalCajita'
 import './Cajitas.css'
 
 export default function Cajitas() {
+  const nav = useNavigate()
   const [cajitas, setCajitas] = useState([])
   const [cargando, setCargando] = useState(true)
   const [mostrarModal, setMostrarModal] = useState(false)
@@ -16,8 +17,6 @@ export default function Cajitas() {
   }, [])
 
   if (cargando) return <div className="cargando">Cargando...</div>
-
-  const nav = useNavigate()
 
   return (
     <div className="contenedor pagina">
