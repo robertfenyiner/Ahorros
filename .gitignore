@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 backend/ahorros.db
 backend/.env
+/.env
 venv/
 .venv/
 
